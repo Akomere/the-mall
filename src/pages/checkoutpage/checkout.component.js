@@ -36,7 +36,7 @@ const CheckoutPage = ({cartItems, total}) => {
             <span>TOTAL: ${total}</span>
         </div>
         <div className='test-warning'>
-        *Pleae use the following test cresdut card for payments*
+        *Pleae use the following test credit card for payments*
         <br/>
         4242 4242 4242 4242 4242 - Exp: 01/23 - CVV: 123   
         </div>
