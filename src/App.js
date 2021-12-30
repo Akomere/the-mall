@@ -6,11 +6,12 @@ import SignPage from './pages/sign-in-sign-up/sign-page';
 import { Switch, Route, Redirect } from 'react-router-dom'
 import CheckoutPage from './pages/checkoutpage/checkout.component';
 import ShopPage from './pages/shopage/shopage.component';
-import {auth, createUserProfileDoc} from './firbase/firebase.utils'
+import {auth, createUserProfileDoc, addCollectionAndDocuments} from './firbase/firebase.utils'
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 import { selectCurrentUser } from './redux/user/user.selector';
 import { setCurrentUser } from './redux/user/user.action';
+import { selectCollectionsforPreview } from './redux/collection/collection.selector';
 
 const Hats = () => {
   return (
@@ -25,7 +26,7 @@ class App extends React.Component {
   closeSubFromAuth = null;
 
   componentDidMount(){
-    const {setCurrentUser} = this.props;
+    const {setCurrentUser, collectionsArray} = this.props;
     this.closeSubFromAuth = auth.onAuthStateChanged(async userAuth=>{
      if(userAuth){
        const userRef = await createUserProfileDoc(userAuth)
@@ -36,10 +37,11 @@ class App extends React.Component {
          })  
        })
        console.log(this.state)
-     }else{
-       setCurrentUser(userAuth)
      }
-      
+      setCurrentUser(userAuth)
+      addCollectionAndDocuments('collections', collectionsArray.map(({title,items}) => ({title, items})))
+      console.log(collectionsArray)
+       
     })
   }
   componentWillUnmount(){
@@ -67,12 +69,12 @@ class App extends React.Component {
 // mutliple selectors and passes in the state automatically
 // please see cart-dropdown mapStateToProps
 const mapStateToProps = createStructuredSelector({
-  currentUser: selectCurrentUser
+  currentUser: selectCurrentUser,
+  collectionsArray: selectCollectionsforPreview
 })
 
 const mapDispatchToProps = dispatch =>({
   setCurrentUser: user => dispatch(setCurrentUser(user))
-
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

@@ -20,8 +20,7 @@ const CategoryPage = ({collection})=> {
                 <CollectionItem key={item.id} item={item}/>
             ))}
         </div>
-       
-            
+           
         </div>
     )
 }
